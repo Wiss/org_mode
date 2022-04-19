@@ -35,14 +35,13 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
 ;; - `use-package!' for configuring packages
 ;; - `after!' for running code after a package has loaded
 ;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
+;;   this file. Emacs searches the packages with
 ;;   `require' or `use-package'.
 ;; - `map!' for binding new keys
 ;;
@@ -64,3 +63,64 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
+
+
+;; org-capture templates
+;; with the specifier %i you will copy and paste all the highlited text in the tempalte
+(after! org
+(setq org-capture-templates
+      '(("d" "Demo template" entry
+         (file+headline "demo.org" "Our first heading")
+         "* DEMO TEXT %?")
+      ("p" "Prompt us for input" entry
+        (file+headline "demo.org" "Our First heading")
+        "* %^{Please write here} %?")
+      ("o" "Options in prompt" entry
+        (file+headline "demo.org" "Our Second heading")
+        "* %^{Selet yout option|ONE|TWO|THREE} %?")
+      ("r" "Task with date" entry
+        (file+headline "demo.org" "Scheduled tasks")
+        "* %^{Selet yout option|ONE|TWO|THREE}\n SCHEDULE: %^t\n Some extra text %?")
+      ("a" "A random template")
+       ("at" "Submenu option T" entry
+        (file+headline "demo.org" "Scheduled tasks")
+        "* %^{Selet yout option|ONE|TWO|THREE}\n SCHEDULE: %^t\n Some extra text %?")
+        ("aa" "Submenu option A" entry
+        (file+headline "demo.org" "Scheduled tasks")
+        "* %^{Selet yout option|ONE|TWO|THREE}\n SCHEDULE: %^t\n Some extra text %?")
+
+        ("t" "Task to do")
+        ("td" "With deadline" entry
+         (file+headline "general_todos.org" "To-Do with deadline")
+         "* TODO %?\n DEADLINE %^t")
+        ("ts" "With schedule" entry
+         (file+headline "general_todos.org" "To-Do with schedule")
+         "* TODO %?\n SCHEDULE %^t")
+        ("to" "Without deadline" entry
+         (file+headline "general_todos.org" "To-Do")
+         "* TODO %?")
+      ("i" "Idea" entry
+       (file+headline "idea.org" "Idea")
+        "* IDEA %?"))
+))
+
+;;
+;; This is for org-ref
+(setq reftex-default-bibliography '("~/Dropbox/bibliography/references.bib"))
+
+;; see org-ref for use of these variables
+(setq org-ref-bibliography-notes "~/Dropbox/bibliography/notes.org"
+      org-ref-default-bibliography '("~/Dropbox/bibliography/references.bib")
+      org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
+
+(setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
+      bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs"
+      bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes")
+
+;; open pdf with system pdf viewer (works on mac)
+(setq bibtex-completion-pdf-open-function
+  (lambda (fpath)
+    (start-process "open" "*open*" "open" fpath)))
+
+;; alternative
+;; (setq bibtex-completion-pdf-open-function 'org-open-file)
